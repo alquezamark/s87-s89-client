@@ -11,7 +11,7 @@ const AdminActions = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/posts/");
+        const response = await fetch("https://s87-s89-server.onrender.com/api/posts/");
         const data = await response.json();
         setPosts(data);
       } catch (error) {
@@ -26,7 +26,7 @@ const AdminActions = () => {
 
   const fetchComments = async (postId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/comments/${postId}`);
+      const response = await fetch(`https://s87-s89-server.onrender.com/api/comments/${postId}`);
       const data = await response.json();
       setComments(data);
       setSelectedPostId(postId);
@@ -58,7 +58,7 @@ const AdminActions = () => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("Unauthorized: Admin login required");
 
-        const response = await fetch(`http://localhost:5000/api/admin/posts/${postId}`, {
+        const response = await fetch(`https://s87-s89-server.onrender.com/api/admin/posts/${postId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -93,7 +93,7 @@ const AdminActions = () => {
         const token = localStorage.getItem("token");
         if (!token) throw new Error("No authentication token found");
 
-        const response = await fetch(`http://localhost:5000/api/admin/comments/${commentId}`, {
+        const response = await fetch(`https://s87-s89-server.onrender.com/api/admin/comments/${commentId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -156,7 +156,9 @@ const AdminActions = () => {
                           <ul className="list-group">
                             {comments.map((comment) => (
                               <li key={comment._id} className="list-group-item d-flex justify-content-between align-items-center">
-                                {comment.content}
+                                <div>
+                                  <strong>{comment.author?.username || "Unknown User"}:</strong> {comment.content}
+                                </div>
                                 <button className="btn btn-danger btn-sm" onClick={() => handleDeleteComment(comment._id)}>
                                   Delete
                                 </button>

@@ -16,9 +16,8 @@ const PostDetail = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/posts/${postId}`);
+        const response = await fetch(`https://s87-s89-server.onrender.com/api/posts/${postId}`);
         if (!response.ok) throw new Error("Post not found");
-
         const data = await response.json();
         setPost(data);
       } catch (error) {
@@ -28,7 +27,7 @@ const PostDetail = () => {
 
     const fetchComments = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/comments/${postId}`);
+        const response = await fetch(`https://s87-s89-server.onrender.com/api/comments/${postId}`);
         const data = await response.json();
         setComments(data);
       } catch (error) {
@@ -47,7 +46,7 @@ const PostDetail = () => {
     try {
       if (!token) throw new Error("No authentication token found");
 
-      const response = await fetch(`http://localhost:5000/api/comments/${postId}`, {
+      const response = await fetch(`https://s87-s89-server.onrender.com/api/comments/${postId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +58,9 @@ const PostDetail = () => {
       if (!response.ok) throw new Error("Failed to add comment");
 
       const newCommentData = await response.json();
-      setComments([...comments, newCommentData]); // ✅ Update UI without reload
+      
+      // ✅ Instantly update UI with new comment
+      setComments([...comments, { ...newCommentData, author: { username: user.username } }]);
       setNewComment("");
       setMessage("Comment added successfully");
     } catch (error) {
@@ -79,8 +80,10 @@ const PostDetail = () => {
       {comments.length === 0 ? <p>No comments yet.</p> : (
         <ul className="list-group">
           {comments.map((comment) => (
-            <li key={comment._id} className="list-group-item">
-              {comment.content}
+            <li key={comment._id} className="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{comment.author?.username || "Guest"}:</strong> {comment.content}
+              </div>
             </li>
           ))}
         </ul>
@@ -99,9 +102,7 @@ const PostDetail = () => {
           <button type="submit" className="btn btn-primary mt-2">Post Comment</button>
         </form>
       ) : (
-        <button className="btn btn-outline-primary mt-3" onClick={() => navigate("/auth")}>
-          Login to Comment
-        </button>
+        <button className="btn btn-outline-primary mt-3" onClick={() => navigate("/auth")}>Login to Comment</button>
       )}
 
       {message && <p className="text-success mt-2">{message}</p>}

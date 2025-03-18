@@ -15,8 +15,8 @@ const Auth = () => {
     e.preventDefault();
     try {
       const url = isLogin
-        ? "http://localhost:5000/api/auth/login"
-        : "http://localhost:5000/api/auth/register";
+        ? "https://s87-s89-server.onrender.com/api/auth/login"
+        : "https://s87-s89-server.onrender.com/api/auth/register";
 
       const response = await fetch(url, {
         method: "POST",

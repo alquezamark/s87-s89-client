@@ -8,7 +8,7 @@ const CommentSection = ({ postId }) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/comments/${postId}`);
+        const response = await fetch(`https://s87-s89-server.onrender.com/api/comments/${postId}`);
         const data = await response.json();
         setComments(data);
       } catch (error) {
@@ -22,7 +22,7 @@ const CommentSection = ({ postId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5000/api/comments/${postId}`, {
+      const response = await fetch(`https://s87-s89-server.onrender.com/api/comments/${postId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content }),
@@ -46,8 +46,10 @@ const CommentSection = ({ postId }) => {
       {comments.length > 0 ? (
         <ul className="list-group">
           {comments.map((comment) => (
-            <li key={comment._id} className="list-group-item">
-              {comment.content}
+            <li key={comment._id} className="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{comment.author?.username}:</strong> {comment.content}
+              </div>
             </li>
           ))}
         </ul>
